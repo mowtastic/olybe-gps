@@ -7,7 +7,9 @@ use App\Repository\StationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={}
+ * )
  * @ORM\Entity(repositoryClass=StationRepository::class)
  */
 class Station
