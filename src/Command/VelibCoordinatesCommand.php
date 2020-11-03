@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Handler\StationHandler;
 use App\Service\VelibCoordinates;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -20,14 +21,21 @@ class VelibCoordinatesCommand extends Command
     private $velibCoordinates;
 
     /**
+     * @var StationHandler
+     */
+    private $stationHandler;
+
+    /**
      * VelibCoordinatesCommand constructor.
      *
      * @param VelibCoordinates $velibCoordinates
+     * @param StationHandler   $stationHandler
      */
-    public function __construct(VelibCoordinates $velibCoordinates)
+    public function __construct(VelibCoordinates $velibCoordinates, StationHandler $stationHandler)
     {
         parent::__construct();
         $this->velibCoordinates = $velibCoordinates;
+        $this->stationHandler = $stationHandler;
     }
 
     protected function configure()
@@ -40,21 +48,21 @@ class VelibCoordinatesCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $stations = $this->velibCoordinates->getClosestStations(
+        $insertedStations = $this->stationHandler->insertStationFromApi(
             $input->getArgument('geoloc'),
             $input->getOption('nbRows')
         );
 
-        if (empty($stations)) {
-            $output->writeln('No stations closed');
+        if (empty($insertedStations)) {
+            $output->writeln('No station found');
         }
 
         $table = new Table($output);
-        $table
-            ->setHeaders(['Name', 'Coordinates GPS', 'Distance']);
+        $table->setHeaders(['Name', 'Coordinates GPS', 'Distance']);
 
-        foreach ($stations as $station) {
-            $table->addRow([$station['name'], $station['coordinates'], $station['dist']]);
+        foreach ($insertedStations as $station) {
+            $table->addRow([
+                $station['name'], $station['coordinates'], $station['dist']]);
         }
         $table->render();
 

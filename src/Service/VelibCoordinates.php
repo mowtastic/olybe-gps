@@ -62,33 +62,4 @@ class VelibCoordinates
 
         return null;
     }
-
-    /**
-     * @param string $geoLoc
-     * @param int    $nbRows
-     *
-     * @return array
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     */
-    public function getClosestStations(string $geoLoc, int $nbRows = 5)
-    {
-        $stations = [];
-        $response = $this->getContentFromOpenAPI($geoLoc, $nbRows);
-
-        if (isset($response)) {
-            foreach ($response['records'] as $record) {
-                $stations[] = [
-                    'name' => $record['fields']['name'],
-                    'coordinates' => $record['fields']['coordonnees_geo'][0] . ',' . $record['fields']['coordonnees_geo'][1],
-                    'dist' => $record['fields']['dist'],
-                ];
-            }
-        }
-
-        return $stations;
-    }
 }

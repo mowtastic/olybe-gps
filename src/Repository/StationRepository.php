@@ -19,32 +19,13 @@ class StationRepository extends ServiceEntityRepository
         parent::__construct($registry, Station::class);
     }
 
-    // /**
-    //  * @return Station[] Returns an array of Station objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function persist(Station $station)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $this->_em->persist($station);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Station
+    public function flush()
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->_em->flush();
     }
-    */
 }
